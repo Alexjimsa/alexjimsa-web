@@ -1,0 +1,79 @@
+---
+/* No props, es un botón global */
+---
+
+<button class="theme-toggle btn btn--outline" aria-label="Cambiar tema">
+  <svg class="sun" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="11.25" fill="#FACC15"/>
+    <path d="M20 5L22.1651 6.875H17.8349L20 5Z" fill="#FACC15"/>
+    <path d="M35 20L33.125 22.1651V17.8349L35 20Z" fill="#FACC15"/>
+    <path d="M20 35L17.8349 33.125H22.1651L20 35Z" fill="#FACC15"/>
+    <path d="M5 20L6.875 17.8349V22.1651L5 20Z" fill="#FACC15"/>
+    <path d="M9.26777 9.26763L12.1245 9.06253L9.06266 12.1244L9.26777 9.26763Z" fill="#FACC15"/>
+    <path d="M31.0355 9.26777L31.2406 12.1245L28.1788 9.06266L31.0355 9.26777Z" fill="#FACC15"/>
+    <path d="M31.0355 31.0355L28.1788 31.2406L31.2406 28.1787L31.0355 31.0355Z" fill="#FACC15"/>
+    <path d="M9.26776 31.0356L9.06265 28.1788L12.1245 31.2407L9.26776 31.0356Z" fill="#FACC15"/>
+  </svg>
+
+  <svg class="moon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20.0002 7.5C26.9037 7.50013 32.5002 13.0965 32.5002 20C32.5002 26.9035 26.9037 32.4999 20.0002 32.5C16.4829 32.5 13.3068 31.0452 11.0354 28.707C17.4545 28.1807 22.5002 22.8049 22.5002 16.25C22.5002 12.8634 21.1513 9.79313 18.9641 7.54199C19.3057 7.51397 19.6514 7.5 20.0002 7.5Z" fill="#3B82F6"/>
+  </svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  // Seleccionamos todos los botones con la clase theme-toggle
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".theme-toggle");
+
+  // Al cargar, aplicamos la preferencia guardada (si existe)
+  const saved = localStorage.getItem("theme");
+  if (saved) {
+    root.setAttribute("data-theme", saved);
+  }
+
+  // Toggle manual - agregamos el evento a todos los botones
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme");
+      let next;
+      if (!current) {
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        next = systemPrefersDark ? "light" : "dark";
+      } else {
+        next = current === "dark" ? "light" : "dark";
+      }
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  });
+</script>
+
+
+<style>
+  button {
+    background: var(--color-surface_hover, none);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 999px;
+  }
+
+  button:focus, button:hover {
+    background-color: var(--color-surface);
+  }
+
+  :root[data-theme="dark"] {
+    .sun { display: block; }
+    .moon { display: none; }
+  }
+  :root[data-theme="light"] {
+    .moon {
+      display: block;
+    }
+    .sun {
+      display: none;
+    }
+    
+  }
+
+</style>

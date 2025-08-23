@@ -1,0 +1,63 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  variant: 'mobile' | 'desktop';
+}
+
+const { variant } = Astro.props;
+---
+
+<div class={`header-actions ${variant}`} role="group" aria-label="Preferencias">
+  <nav aria-label="Selector de idioma">
+    <a href="/es/" hreflang="es">ES</a>
+    <span aria-hidden="true">|</span>
+    <a href="/en/" hreflang="en">EN</a>
+  </nav>
+  <ThemeToggle />
+</div>
+
+<style>
+  .header-actions.mobile {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-actions.desktop {
+    display: none;
+  }
+
+  @media (min-width: 850px) {
+    .header-actions.mobile {
+      display: none;
+    }
+
+    .header-actions.desktop {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 1rem;
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  nav > * {
+    color: var(--color-text_muted);
+  }
+  nav a {
+    text-decoration: none;
+  }
+  a:hover,
+  a:focus {
+    color: var(--color-text);
+  }
+</style>

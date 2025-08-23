@@ -1,0 +1,55 @@
+<div class="logo">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+
+<style>
+  .logo {
+    aspect-ratio: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 4px;
+    width: clamp(50px, 8vw, 70px);
+    transition: transform 0.4s ease;
+  }
+
+  .square {
+    border: 1px solid var(--color-text, #fff);
+    width: 100%;
+    height: 100%;
+    transition: background-color 0.3s;
+  }
+
+  /* Usamos grid-template-areas para definir el layout */
+  .logo {
+    grid-template-areas: 
+      "a b ."
+      "d e f"
+      "g h i";
+  }
+
+  .square:nth-child(1) { grid-area: a; }
+  .square:nth-child(2) { grid-area: b; }
+  .square:nth-child(3) { grid-area: d; }
+  .square:nth-child(4) { grid-area: e; }
+  .square:nth-child(5) { grid-area: f; }
+  .square:nth-child(6) { grid-area: g; }
+  .square:nth-child(7) { grid-area: h; }
+  .square:nth-child(8) { grid-area: i; }
+
+  .logo:hover {
+    transform: scale(1.1);
+    transform: rotate(-45deg);
+  }
+
+  .logo:hover .square {
+    background-color: var(--color-primary, #000);
+  }
+</style>

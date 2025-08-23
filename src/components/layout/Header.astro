@@ -1,0 +1,205 @@
+---
+import Logo from '../ui/Logo.astro';
+import HeaderActions from '../ui/HeaderActions.astro';
+---
+
+<header>
+  <div class="header-container">
+    <a href="/" class="logo-link">
+      <Logo />
+    </a>
+
+    <!-- Hidden checkbox to control the menu -->
+    <input type="checkbox" id="menu-toggle" />
+
+    <!-- Label that acts as a hamburger button -->
+    <label for="menu-toggle" class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <nav>
+      <HeaderActions variant="mobile" />
+      <ul>
+        <li>
+          <a
+            href="/about"
+            onclick="document.getElementById('menu-toggle').checked = false"
+            >About</a>
+        </li>
+        <li>
+          <a
+            href="/proyectos"
+            onclick="document.getElementById('menu-toggle').checked = false"
+            >Projects</a>
+        </li>
+        <li>
+          <a
+            href="/blog"
+            onclick="document.getElementById('menu-toggle').checked = false"
+            >Blog</a>
+        </li>
+      </ul>
+    </nav>
+    <HeaderActions variant="desktop" />
+  </div>
+</header>
+
+<style>
+  header {
+    padding: 2rem;
+    position: relative;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Hide checkbox */
+  #menu-toggle {
+    display: none;
+  }
+
+  /* Hamburger button - visible by default on mobile */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+  }
+
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-text);
+    margin: 3px 0;
+    transition: 0.3s;
+    transform-origin: center;
+  }
+
+  /* Hamburger button animation when checkbox is checked */
+  #menu-toggle:checked + .hamburger span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  #menu-toggle:checked + .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+
+  #menu-toggle:checked + .hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* Navigation - Default mobile styles */
+  nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-surface);
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* Show navigation when checkbox is checked */
+  #menu-toggle:checked ~ nav {
+    right: 0;
+  }
+
+  nav ul {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    list-style: none;
+    gap: 3rem;
+  }
+
+  nav ul li a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    transition: background-color 0.3s ease;
+  }
+
+  nav ul li a:hover {
+    color: var(--color-primary, #2AB01E);
+  }
+
+  /* Overlay */
+  nav::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s,
+      visibility 0.3s;
+    z-index: -1;
+  }
+
+  #menu-toggle:checked ~ nav::before {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Prevent scroll when menu is open */
+  #menu-toggle:checked ~ body,
+  body:has(#menu-toggle:checked) {
+    overflow: hidden;
+  }
+
+  /* Desktop styles */
+  @media (min-width: 850px) {
+    .header-container {
+      display: grid;
+      /* 3 columnas para colocar logo y actions en los extremos */
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      column-gap: 1rem;
+      position: relative;
+    }
+
+    .hamburger {
+      display: none;
+    }
+
+    nav {
+      position: static;
+      width: auto;
+      height: auto;
+      background-color: transparent;
+
+      text-align: center;
+    }
+
+    nav ul {
+      flex-direction: row;
+      height: auto;
+      gap: 2rem;
+    }
+
+    nav ul li a {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+    }
+
+    nav::before {
+      display: none;
+    }
+  }
+</style>

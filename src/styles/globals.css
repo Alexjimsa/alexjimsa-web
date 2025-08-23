@@ -1,0 +1,151 @@
+/* This defines the explicit order of the used layers */
+@layer reset, base, components, utilities;
+
+
+@layer reset {
+  /* http://meyerweb.com/eric/tools/css/reset/ 
+     v2.0 | 20110126
+     License: none (public domain)
+  */
+
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  /* HTML5 display-role reset for older browsers */
+  article, aside, details, figcaption, figure, 
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+  body {
+    line-height: 1;
+  }
+  ol, ul {
+    list-style: none;
+  }
+  blockquote, q {
+    quotes: none;
+  }
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+}
+
+/* Base styles will now take precedence over the reset */
+@layer base {
+  :root { color-scheme: light dark; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-normal);
+    color: var(--color-text);
+    background: var(--color-bg);
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Titles using semantic tokens */
+  h1, h2, h3, h4 {
+    font-family: var(--font-titles);
+    line-height: var(--lh-tight);
+    margin: var(--size-6) 0 var(--size-3); /* uses your neutral scale */
+  }
+
+  h1 {
+    font-family: var(--font-titles);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+  }
+  h2 {
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-semibold);
+  }
+  h3 {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+  }
+  h4 {
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-medium);
+  }
+
+  p { margin: 0 0 var(--size-4); }
+
+  small {
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+  }
+
+  a {
+    color: var(--link, var(--color-primary-dark)); /* fallback if --link is not defined yet */
+    text-decoration: none;
+  }
+  a:hover { color: var(--link-hover, var(--color-primary)); text-decoration: underline; }
+
+  img, svg, video { display: block; max-width: 100%; height: auto; }
+
+  /* Basic lists and tables (optional) */
+  ul, ol { margin: 0 0 var(--size-4) var(--size-6); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--size-6) 0;
+  }
+  th, td {
+    border: 1px solid var(--color-border);
+    padding: var(--size-3) var(--size-4);
+    text-align: left;
+  }
+}
+
+/* Global reusable patterns */
+@layer components {
+  /* Fluid container */
+  .container {
+    width: min(100% - 2rem, var(--max-w));
+    margin-inline: auto;
+  }
+
+  /* Prose for MDX (when wrapping the post with <article class="prose">) */
+  .prose { color: var(--color-text); max-width: 70ch; }
+  .prose > * + * { margin-top: var(--size-4); }
+  .prose h1, .prose h2, .prose h3 { scroll-margin-top: 90px; }
+  .prose blockquote {
+    margin: var(--size-6) 0;
+    padding: var(--size-3) var(--size-6);
+    border-left: 4px solid var(--color-primary);
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+  }
+  .prose code, .prose pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--color-surface_hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  .prose code { padding: .15rem .35rem; }
+  .prose pre { padding: var(--size-4); overflow: auto; }
+}
