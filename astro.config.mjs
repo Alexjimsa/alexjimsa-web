@@ -1,5 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx'; // ← official MDX
 
-// https://astro.build/config
-export default defineConfig({});
+// https://docs.astro.build/config
+export default defineConfig({
+  integrations: [mdx()], // ← activate MDX
+});
