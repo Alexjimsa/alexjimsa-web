@@ -75,7 +75,6 @@
   }
 
   h1 {
-    font-family: var(--font-titles);
     font-size: var(--fs-h1);
     font-weight: var(--fw-bold);
   }

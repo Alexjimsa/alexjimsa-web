@@ -2,6 +2,8 @@
 import "../styles/tokens.css";
 import "../styles/globals.css";
 import "../styles/utils.css";
+
+import Header from "../components/layout/Header.astro";
 ---
 
 <html lang="es">
@@ -16,7 +18,10 @@ import "../styles/utils.css";
 		<title>Astro</title>
 	</head>
 	<body>
-		<slot />
+		<Header />
+		<main>
+			<slot />
+		</main>
 	</body>
 </html>
 
@@ -26,4 +31,12 @@ import "../styles/utils.css";
 		padding: 0;
 		box-sizing: border-box;
 	}
+
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-xl, 64px);
+	}
+
 </style>

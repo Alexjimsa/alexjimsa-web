@@ -71,6 +71,12 @@
   --space-lg: var(--size-8);  /* 32px */
   --space-xl: var(--size-16);  /* 64px */
 
+  /* Border Radius */
+  --br-xs: 0.125rem;  /* 2px */
+  --br-sm: 0.25rem;  /* 4px */
+  --br-md: 0.5rem;  /* 8px (base) */
+  --br-lg: 1rem;  /* 16px */
+
   /* Active tokens (default: light) */
   --color-bg: var(--color-bg-light);
   --color-surface_hover: var(--color-surface_hover-light);
