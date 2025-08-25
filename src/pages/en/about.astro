@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+
+// Get "about" entry in English
+const entry = (await getCollection('pages', ({ data }) =>
+  data.pageId === 'about' && data.lang === 'en'
+))[0];
+
+if (!entry) {
+  throw new Error('About (EN) not found. Did you create src/content/pages/about.en.mdx?');
+}
+
+const { data } = entry;
+const { Content } = await render(entry);
+
+const metaTitle = data.seoTitle ?? data.title;
+const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDesc} />
+  </head>
+  <body>
+    <main class="container">
+      <h1 class="title">{data.title}</h1>
+
+      {data.heroImage && <img src={data.heroImage} alt={data.title} />}
+
+      <article class="prose">
+        <Content />
+      </article>
+    </main>
+  </body>
+</html>
