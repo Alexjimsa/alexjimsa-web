@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+
+// Trae todos los posts del blog
+const all = await getCollection('blog');
+
+// Filtra por idioma ES y publicados
+const posts = all
+  .filter((e) => e.data.lang === 'es' && e.data.published)
+  .sort((a, b) => {
+    const da = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const db = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return db - da; // desc
+  });
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blog</title>
+    <meta name="description" content="Listado de artículos en español" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Blog</h1>
+
+      {posts.length === 0 ? (
+        <p>No hay artículos publicados todavía.</p>
+      ) : (
+        <ul>
+          {posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              {post.data.excerpt && <p>{post.data.excerpt}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </main>
+  </body>
+</html>

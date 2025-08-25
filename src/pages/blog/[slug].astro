@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+
+// 1) Genera las rutas estáticas para ES usando Content Collections
+export async function getStaticPaths() {
+  const entries = await getCollection('blog', (e) => e.data.lang === 'es' && e.data.published);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },   // usamos entry.id porque en el listado enlazamos con id
+    props: { entry },             // pasamos la entry como prop para no volver a buscarla
+  }));
+}
+
+// 2) Recibe la entry preinyectada por getStaticPaths()
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+// SEO fallbacks
+const metaTitle = data.seoTitle ?? data.title;
+const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDesc} />
+  </head>
+  <body>
+    <main class="container">
+      <article class="prose">
+        <h1>{data.title}</h1>
+        {data.heroImage && <img src={data.heroImage} alt={data.title} />}
+        <Content />
+      </article>
+    </main>
+  </body>
+</html>
