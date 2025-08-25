@@ -19,7 +19,7 @@ import HeaderActions from '../ui/HeaderActions.astro';
       <span></span>
     </label>
 
-    <nav>
+    <nav class="site-nav">
       <HeaderActions variant="mobile" />
       <ul>
         <li>
@@ -97,7 +97,7 @@ import HeaderActions from '../ui/HeaderActions.astro';
   }
 
   /* Navigation - Default mobile styles */
-  nav {
+  .site-nav {
     position: fixed;
     top: 0;
     right: -100%;
@@ -109,11 +109,11 @@ import HeaderActions from '../ui/HeaderActions.astro';
   }
 
   /* Show navigation when checkbox is checked */
-  #menu-toggle:checked ~ nav {
+  #menu-toggle:checked ~ .site-nav {
     right: 0;
   }
 
-  nav ul {
+  .site-nav ul {
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -124,7 +124,7 @@ import HeaderActions from '../ui/HeaderActions.astro';
     gap: 3rem;
   }
 
-  nav ul li a {
+  .site-nav ul li a {
     color: var(--color-text);
     text-decoration: none;
     font-size: 1.2rem;
@@ -132,12 +132,12 @@ import HeaderActions from '../ui/HeaderActions.astro';
     transition: background-color 0.3s ease;
   }
 
-  nav ul li a:hover {
+  .site-nav ul li a:hover {
     color: var(--color-primary, #2AB01E);
   }
 
   /* Overlay */
-  nav::before {
+  .site-nav::before {
     content: "";
     position: fixed;
     top: 0;
@@ -152,7 +152,7 @@ import HeaderActions from '../ui/HeaderActions.astro';
     z-index: -1;
   }
 
-  #menu-toggle:checked ~ nav::before {
+  #menu-toggle:checked ~ .site-nav::before {
     opacity: 1;
     visibility: visible;
   }
@@ -167,7 +167,6 @@ import HeaderActions from '../ui/HeaderActions.astro';
   @media (min-width: 850px) {
     .header-container {
       display: grid;
-      /* 3 columnas para colocar logo y actions en los extremos */
       grid-template-columns: auto 1fr auto;
       align-items: center;
       column-gap: 1rem;
@@ -178,28 +177,45 @@ import HeaderActions from '../ui/HeaderActions.astro';
       display: none;
     }
 
-    nav {
+    .site-nav {
       position: static;
       width: auto;
       height: auto;
       background-color: transparent;
 
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
 
-    nav ul {
+    .site-nav ul {
       flex-direction: row;
       height: auto;
       gap: 2rem;
+      margin: 0;
+      padding: 0;
     }
 
-    nav ul li a {
+    .site-nav ul li a {
       font-size: 1rem;
       padding: 0.5rem 1rem;
     }
 
-    nav::before {
+    .site-nav::before {
       display: none;
     }
+  }
+
+  /* Add these new utility classes at the end of the stylesheet */
+  .header-container img,
+  .header-container svg { 
+    display: block; 
+  }
+  
+  .site-nav a { 
+    display: inline-flex; 
+    align-items: center; 
+    line-height: 1;
   }
 </style>
