@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 
 interface Props {
   variant: 'mobile' | 'desktop';
@@ -9,11 +10,7 @@ const { variant } = Astro.props;
 ---
 
 <div class={`header-actions ${variant}`} role="group" aria-label="Preferencias">
-  <nav aria-label="Selector de idioma">
-    <a href="/es/" hreflang="es">ES</a>
-    <span aria-hidden="true">|</span>
-    <a href="/en/" hreflang="en">EN</a>
-  </nav>
+  <LanguageSwitcher />
   <ThemeToggle />
 </div>
 
@@ -41,23 +38,5 @@ const { variant } = Astro.props;
       flex-direction: row-reverse;
       gap: 1rem;
     }
-  }
-
-  nav {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  nav > * {
-    color: var(--color-text_muted);
-  }
-  nav a {
-    text-decoration: none;
-  }
-  a:hover,
-  a:focus {
-    color: var(--color-text);
   }
 </style>

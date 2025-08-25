@@ -1,0 +1,47 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props { class?: string; navLabel?: string }
+const { class: className = '', navLabel = 'Language selector' } = Astro.props;
+
+// 1) Local route and current locale (official APIs)
+const path = Astro.url.pathname;           // e.g. "/", "/blog", "/en/projects/abc"
+const current = Astro.currentLocale as 'es' | 'en';  // "es" or "en" based on URL
+
+// 2) Top-level sections that we will maintain over time (menu)
+const SECTIONS = ['', 'about', 'blog', 'projects'] as const;
+
+// 3) We deduce the current section: if it's not base, we fall back to the listing
+const getSection = (p: string): (typeof SECTIONS)[number] => {
+  // remove "/en" prefix if it exists for comparison
+  const bare = p.replace(/^\/en(\/|$)/, '/');
+  // does it match exactly "/", "/about", "/blog", "/projects"?
+  for (const s of SECTIONS) {
+    const asPath = s === '' ? '/' : `/${s}`;
+    if (bare === asPath || bare.startsWith(asPath + '/')) return s;
+  }
+  // detail of post/project → listings
+  if (bare.startsWith('/blog/')) return 'blog';
+  if (bare.startsWith('/projects/')) return 'projects';
+  return ''; // fallback → home
+};
+
+const section = getSection(path);
+
+// 4) Localized links (official docs)
+const esHref = getRelativeLocaleUrl('es', section);
+const enHref = getRelativeLocaleUrl('en', section);
+---
+
+<nav aria-label={navLabel} class={className}>
+  <a href={esHref} hreflang="es" rel="alternate" aria-current={current === 'es' ? 'page' : undefined}>ES</a>
+  <span aria-hidden="true">|</span>
+  <a href={enHref} hreflang="en" rel="alternate" aria-current={current === 'en' ? 'page' : undefined}>EN</a>
+</nav>
+
+<style>
+  nav { display:inline-flex; align-items:center; gap:.5rem; }
+  nav a { text-decoration:none; color: var(--color-text_muted); }
+  nav a[aria-current="page"] { font-weight:700; color:var(--color-text); text-decoration: underline; text-underline-offset:.2em; }
+  nav a:hover, nav a:focus { color: var(--color-text); }
+</style>

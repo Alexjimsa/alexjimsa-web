@@ -1,4 +1,6 @@
 ---
+import Header from '../components/layout/Header.astro';
+
 import { getCollection, render } from 'astro:content';
 
 // Buscar la entrada "about" en español
@@ -24,6 +26,7 @@ const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
     <meta name="description" content={metaDesc} />
   </head>
   <body>
+    <Header />
     <main class="container">
       <h1 class="title">{data.title}</h1>
 

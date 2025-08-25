@@ -1,9 +1,21 @@
 ---
 import Logo from '../ui/Logo.astro';
 import HeaderActions from '../ui/HeaderActions.astro';
+
+const { pathname } = Astro.url;
+const isEN = pathname.startsWith('/en');
+const base = isEN ? '/en' : '';
+
+const isActive = (href: string): boolean => {
+  return (
+    pathname === href ||
+    pathname.startsWith(`${href}/`) ||
+    (href === (base || '/') && pathname === (base || '/'))
+  );
+};
 ---
 
-<header>
+<header role="banner">
   <div class="header-container">
     <a href="/" class="logo-link">
       <Logo />
@@ -13,32 +25,23 @@ import HeaderActions from '../ui/HeaderActions.astro';
     <input type="checkbox" id="menu-toggle" />
 
     <!-- Label that acts as a hamburger button -->
-    <label for="menu-toggle" class="hamburger">
+    <label for="menu-toggle" class="hamburger" aria-controls="site-nav" aria-expanded="false">
       <span></span>
       <span></span>
       <span></span>
     </label>
 
-    <nav class="site-nav">
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
       <HeaderActions variant="mobile" />
       <ul>
         <li>
-          <a
-            href="/about"
-            onclick="document.getElementById('menu-toggle').checked = false"
-            >About</a>
+          <a href={`${base}/about`}    aria-current={isActive(`${base}/about`)    ? 'page' : undefined}>About</a>
         </li>
         <li>
-          <a
-            href="/projects"
-            onclick="document.getElementById('menu-toggle').checked = false"
-            >Projects</a>
+          <a href={`${base}/projects`} aria-current={isActive(`${base}/projects`) ? 'page' : undefined}>Projects</a>
         </li>
         <li>
-          <a
-            href="/blog"
-            onclick="document.getElementById('menu-toggle').checked = false"
-            >Blog</a>
+          <a href={`${base}/blog`}     aria-current={isActive(`${base}/blog`)     ? 'page' : undefined}>Blog</a>
         </li>
       </ul>
     </nav>
@@ -219,3 +222,18 @@ import HeaderActions from '../ui/HeaderActions.astro';
     line-height: 1;
   }
 </style>
+
+<script>
+  const cb = document.getElementById('menu-toggle') as HTMLInputElement | null;
+  const btn = document.querySelector('label.hamburger') as HTMLLabelElement | null;
+  const nav = document.getElementById('site-nav') as HTMLElement | null;
+
+  const sync = (): void => {
+    const open = Boolean(cb?.checked);
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (nav)  nav.dataset.open = open ? 'true' : 'false';
+  };
+
+  cb?.addEventListener('change', sync);
+  sync();
+</script>
