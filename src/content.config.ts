@@ -28,17 +28,20 @@ const blog = defineCollection({
     date: z.coerce.date().optional(),
     published: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
-  })
-  .superRefine((data, ctx) => {
-    if (data.published && !data.date) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Si "published" es true, "date" es obligatoria.',
-        path: ['date'],
-      });
+    // usamos el slug del frontmatter para URLs limpias
+    slug: z.string().regex(/^[a-z0-9-]+$/).optional(), // kebab-case
+  }).superRefine((data, ctx) => {
+    if (data.published) {
+      if (!data.date) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'If "published" is true, "date" is required.', path: ['date'] });
+      }
+      if (!data.slug) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'If "published" is true, "slug" is required.', path: ['slug'] });
+      }
     }
   }),
 });
+
 
 // --- Projects ---
 const projects = defineCollection({

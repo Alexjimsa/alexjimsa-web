@@ -25,7 +25,7 @@ const posts = all
         <ul>
           {posts.map((post) => (
             <li>
-              <a href={`/en/blog/${post.id}`}>{post.data.title}</a>
+              <a href={`/en/blog/${post.data.slug}`}>{post.data.title}</a>
               {post.data.excerpt && <p>{post.data.excerpt}</p>}
             </li>
           ))}

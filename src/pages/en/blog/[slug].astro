@@ -4,7 +4,7 @@ import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const entries = await getCollection('blog', (e) => e.data.lang === 'en' && e.data.published);
   return entries.map((entry) => ({
-    params: { slug: entry.id }, // usamos id igual que en ES
+    params: { slug: entry.data.slug! }, // ← slug del frontmatter
     props: { entry },
   }));
 }
