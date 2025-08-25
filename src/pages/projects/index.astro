@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('projects');
+
+const toMs = (d?: Date) => (d ? d.getTime() : 0);
+
+const projects = all
+  .filter((e) => e.data.lang === 'es')
+  .sort((a, b) => toMs(b.data.date) - toMs(a.data.date));
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Proyectos</title>
+    <meta name="description" content="Listado de proyectos en español" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Proyectos</h1>
+
+      {projects.length === 0 ? (
+        <p>No hay proyectos todavía.</p>
+      ) : (
+        <ul>
+          {projects.map((p) =>
+            p.data.slug && (
+              <li>
+                <a href={`/projects/${p.data.slug}`}>{p.data.title}</a>
+                {p.data.excerpt && <p>{p.data.excerpt}</p>}
+              </li>
+            )
+          )}
+        </ul>
+      )}
+    </main>
+  </body>
+</html>
