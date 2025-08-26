@@ -1,5 +1,5 @@
 ---
-import Header from '../components/layout/Header.astro';
+import DefaultLayout from '../layouts/DefaultLayout.astro';
 
 import { getCollection, render } from 'astro:content';
 
@@ -19,22 +19,11 @@ const { Content } = await render(entry); // 👈 Astro v5: uses render(entry)
 const metaTitle = data.seoTitle ?? data.title;
 const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
 ---
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <title>{metaTitle}</title>
-    <meta name="description" content={metaDesc} />
-  </head>
-  <body>
-    <Header />
-    <main class="container">
-      <h1 class="title">{data.title}</h1>
+<DefaultLayout>
+  <h1 class="title">{data.title}</h1>
+    {data.heroImage && <img src={data.heroImage} alt={data.title} />}
 
-      {data.heroImage && <img src={data.heroImage} alt={data.title} />}
-
-      <article class="prose">
-        <Content />
-      </article>
-    </main>
-  </body>
-</html>
+  <article class="prose">
+    <Content />
+  </article>
+</DefaultLayout>
