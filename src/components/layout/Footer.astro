@@ -1,0 +1,51 @@
+---
+import Socials from '../ui/Socials.astro';
+---
+
+<footer>
+  <div>
+    <a href="mailto:alex@example.com">alex@example.com</a>
+    <Socials />
+  </div>
+  <p>© <span id="year"></span> Álex Jiménez. All rights reserved.</p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<style>
+  footer {
+    width: 100%;
+    padding-block: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-text);
+  }
+  div {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  p {
+    font-size: var(--fs-small);
+    color: var(--color-text_muted);
+    margin: 0;
+  }
+
+  @media (min-width: 600px) {
+    div {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: auto;
+    }
+  }
+</style>
