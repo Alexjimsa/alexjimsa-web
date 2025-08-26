@@ -4,19 +4,44 @@ import HeaderActions from "../ui/HeaderActions.astro";
 ---
 
 <header>
-  <nav>
-    <a href="">Blog</a>
-    <span>&gt;</span>
-    <a href="">Blog-post</a>
-  </nav>
-  <HeaderActions />
+  <div class="header-container">
+    <nav>
+      <a href="">Blog</a>
+      <span>&gt;</span>
+      <span>Blog-post</span>
+    </nav>
+    <HeaderActions variant="desktop"/>
+  </div>
 </header>
 
 <style>
   header {
+    padding: 2rem;
+    position: relative;
+  }
+
+  .header-container {
     width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    margin: 0 auto;
   }
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  nav > * {
+    color: var(--color-text_muted);
+  }
+
+  nav > a:hover {
+    color: var(--color-text);
+  }
+
 </style>

@@ -1,4 +1,6 @@
 ---
+import PostLayout from '../../../layouts/PostLayout.astro';
+
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -16,19 +18,10 @@ const { Content } = await render(entry);
 const metaTitle = data.seoTitle ?? data.title;
 const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{metaTitle}</title>
-    <meta name="description" content={metaDesc} />
-  </head>
-  <body>
-    <main class="container">
-      <article class="prose">
-        <h1>{data.title}</h1>
-        {data.heroImage && <img src={data.heroImage} alt={data.title} />}
-        <Content />
-      </article>
-    </main>
-  </body>
-</html>
+<PostLayout>
+  <article class="prose">
+    <h1>{data.title}</h1>
+      {data.heroImage && <img src={data.heroImage} alt={data.title} />}
+    <Content />
+  </article>
+</PostLayout>
