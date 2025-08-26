@@ -1,12 +1,11 @@
 ---
 import PostLayout from '../../layouts/PostLayout.astro';
-
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const entries = await getCollection('blog', (e) => e.data.lang === 'es' && e.data.published);
   return entries.map((entry) => ({
-    params: { slug: entry.data.slug! }, // ← usamos el slug del frontmatter
+    params: { slug: entry.data.slug! },
     props: { entry },
   }));
 }
@@ -18,10 +17,17 @@ const { Content } = await render(entry);
 const metaTitle = data.seoTitle ?? data.title;
 const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
 ---
-<PostLayout>
-  <article class="prose">
+<PostLayout
+  title={data.title}
+  section="blog"
+  metaTitle={metaTitle}
+  metaDesc={metaDesc}
+  lang="es"
+  class="prose"
+>
+  <article>
     <h1>{data.title}</h1>
-      {data.heroImage && <img src={data.heroImage} alt={data.title} />}
+    {data.heroImage && <img src={data.heroImage} alt={data.title} />}
     <Content />
   </article>
 </PostLayout>

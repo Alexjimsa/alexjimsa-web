@@ -1,8 +1,9 @@
 ---
+import PostLayout from '../../../layouts/PostLayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('projects', (e) => e.data.lang === 'en');
+  const entries = await getCollection('projects', (e) => e.data.lang === 'en' && (e.data.published ?? true));
   return entries
     .filter((e) => !!e.data.slug)
     .map((entry) => ({
@@ -18,34 +19,32 @@ const { Content } = await render(entry);
 const metaTitle = data.seoTitle ?? data.title;
 const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{metaTitle}</title>
-    <meta name="description" content={metaDesc} />
-  </head>
-  <body>
-    <main class="container">
-      <article class="prose">
-        <h1>{data.title}</h1>
-        {data.heroImage && <img src={data.heroImage} alt={data.title} />}
+<PostLayout
+  title={data.title}
+  section="projects"
+  metaTitle={metaTitle}
+  metaDesc={metaDesc}
+  lang="en"
+  class="prose"
+>
+  <article>
+    <h1>{data.title}</h1>
+    {data.heroImage && <img src={data.heroImage} alt={data.title} />}
 
-        {data.stack?.length > 0 && (
-          <ul>
-            {data.stack.map((tech) => <li>{tech}</li>)}
-          </ul>
-        )}
+    {data.stack?.length > 0 && (
+      <ul>
+        {data.stack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    )}
 
-        {(data.repoUrl || data.demoUrl) && (
-          <p>
-            {data.repoUrl && <a href={data.repoUrl}>Repository</a>}
-            {' '}
-            {data.demoUrl && <a href={data.demoUrl}>Demo</a>}
-          </p>
-        )}
+    {(data.repoUrl || data.demoUrl) && (
+      <p>
+        {data.repoUrl && <a href={data.repoUrl}>Repository</a>}
+        {' '}
+        {data.demoUrl && <a href={data.demoUrl}>Demo</a>}
+      </p>
+    )}
 
-        <Content />
-      </article>
-    </main>
-  </body>
-</html>
+    <Content />
+  </article>
+</PostLayout>
