@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import ContentHeader from '../../components/layout/ContentHeader.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('blog', (e) => e.data.lang === 'es' && e.data.published);
@@ -23,6 +24,7 @@ const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
     <meta name="description" content={metaDesc} />
   </head>
   <body>
+    <ContentHeader />
     <main class="container">
       <article class="prose">
         <h1>{data.title}</h1>
