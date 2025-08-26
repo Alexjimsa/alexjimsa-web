@@ -1,37 +1,62 @@
 ---
+import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props { class?: string; navLabel?: string }
 const { class: className = '', navLabel = 'Language selector' } = Astro.props;
 
-// 1) Local route and current locale (official APIs)
-const path = Astro.url.pathname;           // e.g. "/", "/blog", "/en/projects/abc"
-const current = Astro.currentLocale as 'es' | 'en';  // "es" or "en" based on URL
+const path = Astro.url.pathname;
+const current = Astro.currentLocale as 'es' | 'en';
+const other = current === 'es' ? 'en' : 'es';
 
-// 2) Top-level sections that we will maintain over time (menu)
 const SECTIONS = ['', 'about', 'blog', 'projects'] as const;
+const bare = path.replace(/^\/en(\/|$)/, '/');
 
-// 3) We deduce the current section: if it's not base, we fall back to the listing
 const getSection = (p: string): (typeof SECTIONS)[number] => {
-  // remove "/en" prefix if it exists for comparison
-  const bare = p.replace(/^\/en(\/|$)/, '/');
-  // does it match exactly "/", "/about", "/blog", "/projects"?
   for (const s of SECTIONS) {
     const asPath = s === '' ? '/' : `/${s}`;
-    if (bare === asPath || bare.startsWith(asPath + '/')) return s;
+    if (p === asPath || p.startsWith(asPath + '/')) return s;
   }
-  // detail of post/project → listings
-  if (bare.startsWith('/blog/')) return 'blog';
-  if (bare.startsWith('/projects/')) return 'projects';
-  return ''; // fallback → home
+  if (p.startsWith('/blog/')) return 'blog';
+  if (p.startsWith('/projects/')) return 'projects';
+  return '';
 };
 
-const section = getSection(path);
+const section = getSection(bare);
 
-// 4) Localized links (official docs)
-const esHref = getRelativeLocaleUrl('es', section);
-const enHref = getRelativeLocaleUrl('en', section);
+// defaults: listado por idioma
+let esHref = getRelativeLocaleUrl('es', section);
+let enHref = getRelativeLocaleUrl('en', section);
+
+// detalle BLOG → buscar “hermano”
+if (section === 'blog' && /^\/blog\/[^/]+\/?$/.test(bare)) {
+  const slug = bare.split('/').pop();
+  const entries = await getCollection('blog'); // ya validado por schema
+  const currentEntry = entries.find(e => e.data.lang === current && e.data.slug === slug);
+  if (currentEntry) {
+    const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other);
+    if (sibling) {
+      if (current === 'es') enHref = `/en/blog/${sibling.data.slug}`;
+      else esHref = `/blog/${sibling.data.slug}`;
+    }
+  }
+}
+
+// detalle PROJECT → buscar “hermano”
+if (section === 'projects' && /^\/projects\/[^/]+\/?$/.test(bare)) {
+  const slug = bare.split('/').pop();
+  const entries = await getCollection('projects');
+  const currentEntry = entries.find(e => e.data.lang === current && e.data.slug === slug && (e.data.published ?? true));
+  if (currentEntry) {
+    const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other && (e.data.published ?? true));
+    if (sibling) {
+      if (current === 'es') enHref = `/en/projects/${sibling.data.slug}`;
+      else esHref = `/projects/${sibling.data.slug}`;
+    }
+  }
+}
 ---
+
 
 <nav aria-label={navLabel} class={className}>
   <a href={esHref} hreflang="es" rel="alternate" aria-current={current === 'es' ? 'page' : undefined}>ES</a>
