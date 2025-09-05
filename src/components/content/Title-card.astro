@@ -1,15 +1,21 @@
 ---
 import { ui, type Locale } from "../../i18n/ui";
+import RotatingText from "../../components/islands/RotatingText";
 
 const locale = (Astro.currentLocale ?? "es") as Locale;
 const t = ui[locale];
 
 const headline = t.hero.hey;
-const subtitle = t.hero.roles[0]; // mostramos el 1º por ahora
+const roles = t.hero.roles;
 ---
 <div class="hero">
   <h1>{headline}</h1>
-  <p>{subtitle}</p>
+  <p>
+    <!-- Fallback sin JS: primer rol -->
+    <span class="no-js">{roles[0]}</span>
+    <!-- Isla que rota cuando hay JS -->
+    <RotatingText client:idle items={roles} />
+  </p>
 </div>
 
 <style>
@@ -26,5 +32,10 @@ const subtitle = t.hero.roles[0]; // mostramos el 1º por ahora
     font-family: var(--font-titles);
     font-weight: var(--fw-bold);
     color: var(--color-primary);
+    display: inline-flex;
+    gap: .4ch;
   }
+  /* Ocultamos el fallback cuando hydrate */
+  .no-js { display: none; }
+  :global(noscript) .no-js { display: inline; } /* por si usas <noscript> */
 </style>
