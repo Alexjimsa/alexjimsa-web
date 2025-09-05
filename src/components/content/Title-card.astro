@@ -1,6 +1,15 @@
+---
+import { ui, type Locale } from "../../i18n/ui";
+
+const locale = (Astro.currentLocale ?? "es") as Locale;
+const t = ui[locale];
+
+const headline = t.hero.hey;
+const subtitle = t.hero.roles[0]; // mostramos el 1º por ahora
+---
 <div class="hero">
-  <h1>Hey, I'm Alex</h1>
-  <p>Web Developer</p>
+  <h1>{headline}</h1>
+  <p>{subtitle}</p>
 </div>
 
 <style>
