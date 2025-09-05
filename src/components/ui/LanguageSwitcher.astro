@@ -25,8 +25,8 @@ const getSection = (p: string): (typeof SECTIONS)[number] => {
 const section = getSection(bare);
 
 // defaults: listado por idioma
-let esHref = getRelativeLocaleUrl('es', section);
-let enHref = getRelativeLocaleUrl('en', section);
+let esHref = getRelativeLocaleUrl('es', section ? `/${section}` : '');
+let enHref = getRelativeLocaleUrl('en', section ? `/${section}` : '');
 
 // detalle BLOG → buscar “hermano”
 if (section === 'blog' && /^\/blog\/[^/]+\/?$/.test(bare)) {
@@ -36,8 +36,8 @@ if (section === 'blog' && /^\/blog\/[^/]+\/?$/.test(bare)) {
   if (currentEntry) {
     const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other);
     if (sibling) {
-      if (current === 'es') enHref = `/en/blog/${sibling.data.slug}`;
-      else esHref = `/blog/${sibling.data.slug}`;
+      if (current === 'es') enHref = getRelativeLocaleUrl('en', `blog/${sibling.data.slug}`);
+      else esHref = getRelativeLocaleUrl('es', `blog/${sibling.data.slug}`);
     }
   }
 }
@@ -50,8 +50,8 @@ if (section === 'projects' && /^\/projects\/[^/]+\/?$/.test(bare)) {
   if (currentEntry) {
     const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other && (e.data.published ?? true));
     if (sibling) {
-      if (current === 'es') enHref = `/en/projects/${sibling.data.slug}`;
-      else esHref = `/projects/${sibling.data.slug}`;
+      if (current === 'es') enHref = getRelativeLocaleUrl('en', `projects/${sibling.data.slug}`);
+      else esHref = getRelativeLocaleUrl('es', `projects/${sibling.data.slug}`);
     }
   }
 }
