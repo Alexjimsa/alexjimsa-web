@@ -2,7 +2,18 @@
 import Logo from '../ui/Logo.astro';
 import HeaderActions from '../ui/HeaderActions.astro';
 
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { ui, type Locale } from "../../i18n/ui";
+
 const { pathname } = Astro.url;
+
+const locale = (Astro.currentLocale ?? "es") as Locale;
+const t = ui[locale];
+
+const aboutHref    = getRelativeLocaleUrl(locale, "/about");
+const projectsHref = getRelativeLocaleUrl(locale, "/projects");
+const blogHref     = getRelativeLocaleUrl(locale, "/blog");
+
 const isEN = pathname.startsWith('/en');
 const base = isEN ? '/en' : '';
 
@@ -35,13 +46,19 @@ const isActive = (href: string): boolean => {
       <HeaderActions variant="mobile" />
       <ul>
         <li>
-          <a href={`${base}/about`}    aria-current={isActive(`${base}/about`)    ? 'page' : undefined}>About</a>
+          <a href={aboutHref}    aria-current={isActive(aboutHref)    ? 'page' : undefined}>
+            {t.nav.about}
+          </a>
         </li>
         <li>
-          <a href={`${base}/projects`} aria-current={isActive(`${base}/projects`) ? 'page' : undefined}>Projects</a>
+          <a href={projectsHref} aria-current={isActive(projectsHref) ? 'page' : undefined}>
+            {t.nav.projects}
+          </a>
         </li>
         <li>
-          <a href={`${base}/blog`}     aria-current={isActive(`${base}/blog`)     ? 'page' : undefined}>Blog</a>
+          <a href={blogHref}     aria-current={isActive(blogHref)     ? 'page' : undefined}>
+            {t.nav.blog}
+          </a>
         </li>
       </ul>
     </nav>
