@@ -2,63 +2,77 @@
 import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-interface Props { class?: string; navLabel?: string }
-const { class: className = '', navLabel = 'Language selector' } = Astro.props;
+const { pathname } = Astro.url;
+const current = pathname.startsWith('/en/') ? 'en' : 'es';
+const other = current === 'en' ? 'es' : 'en';
 
-const path = Astro.url.pathname;
-const current = Astro.currentLocale as 'es' | 'en';
-const other = current === 'es' ? 'en' : 'es';
+// Stripped pathname without locale prefix
+const bare = pathname.replace(/^\/en\//, '/').replace(/\/$/, '');
+const section = bare.split('/')[1];
 
-const SECTIONS = ['', 'about', 'blog', 'projects'] as const;
-const bare = path.replace(/^\/en(\/|$)/, '/');
+let enHref = getRelativeLocaleUrl('en', bare);
+let esHref = getRelativeLocaleUrl('es', bare);
 
-const getSection = (p: string): (typeof SECTIONS)[number] => {
-  for (const s of SECTIONS) {
-    const asPath = s === '' ? '/' : `/${s}`;
-    if (p === asPath || p.startsWith(asPath + '/')) return s;
-  }
-  if (p.startsWith('/blog/')) return 'blog';
-  if (p.startsWith('/projects/')) return 'projects';
-  return '';
-};
-
-const section = getSection(bare);
-
-// defaults: listado por idioma
-let esHref = getRelativeLocaleUrl('es', section ? `/${section}` : '');
-let enHref = getRelativeLocaleUrl('en', section ? `/${section}` : '');
-
-// detalle BLOG → buscar “hermano”
-if (section === 'blog' && /^\/blog\/[^/]+\/?$/.test(bare)) {
+if (section === 'projects' && /^\/projects\/[^/]+\/?$/.test(bare)) {
   const slug = bare.split('/').pop();
-  const entries = await getCollection('blog'); // ya validado por schema
-  const currentEntry = entries.find(e => e.data.lang === current && e.data.slug === slug);
+  const entries = await getCollection('projects');
+  
+  // Buscar la entrada actual por slug y lenguaje
+  const currentEntry = entries.find(e => {
+    const entrySlug = e.data.slug?.replace(/-[a-z]{2}$/, ''); // Elimina el sufijo de idioma
+    const compareSlug = slug?.replace(/-[a-z]{2}$/, '');
+    return e.data.lang === current && entrySlug === compareSlug;
+  });
+
   if (currentEntry) {
-    const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other);
+    // Buscar la entrada correspondiente en el otro idioma usando translationKey
+    const sibling = entries.find(e => 
+      e.data.translationKey === currentEntry.data.translationKey && 
+      e.data.lang === other && 
+      (e.data.published ?? true)
+    );
+
     if (sibling) {
-      if (current === 'es') enHref = getRelativeLocaleUrl('en', `blog/${sibling.data.slug}`);
-      else esHref = getRelativeLocaleUrl('es', `blog/${sibling.data.slug}`);
+      if (current === 'es') {
+        enHref = getRelativeLocaleUrl('en', `projects/${sibling.data.slug}`);
+      } else {
+        esHref = getRelativeLocaleUrl('es', `projects/${sibling.data.slug}`);
+      }
     }
   }
 }
 
-// detalle PROJECT → buscar “hermano”
-if (section === 'projects' && /^\/projects\/[^/]+\/?$/.test(bare)) {
+// Hacer lo mismo para la sección de blog
+if (section === 'blog' && /^\/blog\/[^/]+\/?$/.test(bare)) {
   const slug = bare.split('/').pop();
-  const entries = await getCollection('projects');
-  const currentEntry = entries.find(e => e.data.lang === current && e.data.slug === slug && (e.data.published ?? true));
+  const entries = await getCollection('blog');
+  
+  const currentEntry = entries.find(e => {
+    const entrySlug = e.data.slug?.replace(/-[a-z]{2}$/, '');
+    const compareSlug = slug?.replace(/-[a-z]{2}$/, '');
+    return e.data.lang === current && entrySlug === compareSlug;
+  });
+
   if (currentEntry) {
-    const sibling = entries.find(e => e.data.translationKey === currentEntry.data.translationKey && e.data.lang === other && (e.data.published ?? true));
+    const sibling = entries.find(e => 
+      e.data.translationKey === currentEntry.data.translationKey && 
+      e.data.lang === other && 
+      (e.data.published ?? true)
+    );
+
     if (sibling) {
-      if (current === 'es') enHref = getRelativeLocaleUrl('en', `projects/${sibling.data.slug}`);
-      else esHref = getRelativeLocaleUrl('es', `projects/${sibling.data.slug}`);
+      if (current === 'es') {
+        enHref = getRelativeLocaleUrl('en', `blog/${sibling.data.slug}`);
+      } else {
+        esHref = getRelativeLocaleUrl('es', `blog/${sibling.data.slug}`);
+      }
     }
   }
 }
 ---
 
 
-<nav aria-label={navLabel} class={className}>
+<nav aria-label="Language Switcher">
   <a href={esHref} hreflang="es" rel="alternate" aria-current={current === 'es' ? 'page' : undefined}>ES</a>
   <span aria-hidden="true">|</span>
   <a href={enHref} hreflang="en" rel="alternate" aria-current={current === 'en' ? 'page' : undefined}>EN</a>
