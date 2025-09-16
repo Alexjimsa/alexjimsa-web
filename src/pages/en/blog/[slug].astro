@@ -5,7 +5,7 @@ import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const entries = await getCollection('blog', (e) => e.data.lang === 'en' && e.data.published);
   return entries.map((entry) => ({
-    params: { slug: entry.data.slug! }, // ← slug from frontmatter
+    params: { slug: entry.data.slug },
     props: { entry },
   }));
 }
@@ -15,7 +15,7 @@ const { data } = entry;
 const { Content } = await render(entry);
 
 const metaTitle = data.seoTitle ?? data.title;
-const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
+const metaDesc = data.seoDescription ?? data.excerpt ?? data.title;
 ---
 <PostLayout
   title={data.title}
@@ -24,10 +24,9 @@ const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
   metaDesc={metaDesc}
   lang="en"
   class="prose"
+  heroImage={data.heroImage}
+  publishDate={data.date}
+  tags={data.tags}
 >
-  <article>
-    <h1>{data.title}</h1>
-    {data.heroImage && <img src={data.heroImage} alt={data.title} />}
-    <Content />
-  </article>
+  <Content />
 </PostLayout>

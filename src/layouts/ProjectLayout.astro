@@ -1,0 +1,87 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ContentHeader from '../components/layout/ContentHeader.astro';
+
+interface Props {
+  title: string;
+  metaTitle?: string;
+  metaDesc?: string;
+  lang: 'es' | 'en';
+  class?: string;
+  heroImage?: string;
+  technologies?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+}
+
+const {
+  title,
+  metaTitle = title,
+  metaDesc = '',
+  lang,
+  class: mainClass = '',
+  heroImage,
+  technologies = [],
+  githubUrl,
+  liveUrl
+} = Astro.props;
+---
+
+<BaseLayout title={metaTitle} description={metaDesc} lang={lang}>
+  <ContentHeader title={title} section="projects" />
+  <main class={mainClass}>
+    <article class="project-content">
+      {heroImage && <img src={heroImage} alt={title} class="hero-image" />}
+      <h1>{title}</h1>
+      {technologies.length > 0 && (
+        <ul class="tech-stack">
+          {technologies.map(tech => (
+            <li class="tech-item">{tech}</li>
+          ))}
+        </ul>
+      )}
+      {(githubUrl || liveUrl) && (
+        <div class="project-links">
+          {githubUrl && <a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>}
+          {liveUrl && <a href={liveUrl} target="_blank" rel="noopener noreferrer">Live Demo</a>}
+        </div>
+      )}
+      <slot />
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .project-content {
+    width: 100%;
+    max-width: 65ch;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: var(--space-l, 32px);
+  }
+
+  h1 {
+    margin-bottom: var(--space-s, 12px);
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    list-style: none;
+    margin-bottom: var(--space-l, 32px);
+  }
+
+  .tech-item {
+    color: var(--color-text-secondary);
+  }
+
+  .project-links {
+    display: flex;
+    gap: var(--space-m, 16px);
+    margin-bottom: var(--space-l, 32px);
+  }
+</style>

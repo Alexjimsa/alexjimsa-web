@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ContentHeader from '../components/layout/ContentHeader.astro';
+import TagPill from '../components/ui/TagPill.astro';
 
 interface Props {
   title: string;
@@ -9,6 +10,9 @@ interface Props {
   metaDesc?: string;
   lang?: 'es' | 'en';
   class?: string; // para aplicar clases al <main>
+  heroImage?: string;
+  publishDate?: Date;
+  tags?: string[];
 }
 
 const {
@@ -18,14 +22,35 @@ const {
   metaTitle = title,
   metaDesc = '',
   lang = (Astro.currentLocale as 'es' | 'en') ?? 'es',
-  class: mainClass = ''
+  class: mainClass = '',
+  heroImage,
+  publishDate,
+  tags = []
 } = Astro.props;
+
+const formattedDate = publishDate?.toLocaleDateString(lang, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
 ---
 
 <BaseLayout title={metaTitle} description={metaDesc} lang={lang}>
   <ContentHeader title={title} section={section} />
   <main class={mainClass}>
-    <slot />
+    <article class="post-content">
+      {heroImage && <img src={heroImage} alt={title} class="hero-image" />}
+      <h1>{title}</h1>
+      {publishDate && <time datetime={publishDate.toISOString()}>{formattedDate}</time>}
+      {tags.length > 0 && (
+        <ul class="tags-list">
+          {tags.map(tag => (
+            <TagPill label={tag} href={`/${lang}/blog/tag/${tag}`} />
+          ))}
+        </ul>
+      )}
+      <slot />
+    </article>
   </main>
 </BaseLayout>
 
@@ -37,4 +62,33 @@ const {
 		align-items: center;
 		gap: var(--space-xl, 64px);
 	}
+
+  .post-content {
+    width: 100%;
+    max-width: 65ch;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: var(--space-l, 32px);
+  }
+
+  h1 {
+    margin-bottom: var(--space-m, 16px);
+  }
+
+  time {
+    display: block;
+    margin-bottom: var(--space-l, 32px);
+    color: var(--color-text-secondary, #666);
+  }
+
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs, 8px);
+    margin-bottom: var(--space-l, 32px);
+    list-style: none;
+  }
 </style>

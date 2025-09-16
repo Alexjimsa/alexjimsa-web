@@ -1,5 +1,5 @@
 ---
-import PostLayout from '../../layouts/PostLayout.astro';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -17,34 +17,18 @@ const { data } = entry;
 const { Content } = await render(entry);
 
 const metaTitle = data.seoTitle ?? data.title;
-const metaDesc  = data.seoDescription ?? data.excerpt ?? data.title;
+const metaDesc = data.seoDescription ?? data.excerpt ?? data.title;
 ---
-<PostLayout
+<ProjectLayout
   title={data.title}
-  section="projects"
   metaTitle={metaTitle}
   metaDesc={metaDesc}
   lang="es"
   class="prose"
+  heroImage={data.heroImage}
+  technologies={data.stack}
+  githubUrl={data.repoUrl}
+  liveUrl={data.demoUrl}
 >
-  <article>
-    <h1>{data.title}</h1>
-    {data.heroImage && <img src={data.heroImage} alt={data.title} />}
-
-    {data.stack?.length > 0 && (
-      <ul>
-        {data.stack.map((tech) => <li>{tech}</li>)}
-      </ul>
-    )}
-
-    {(data.repoUrl || data.demoUrl) && (
-      <p>
-        {data.repoUrl && <a href={data.repoUrl}>Repositorio</a>}
-        {' '}
-        {data.demoUrl && <a href={data.demoUrl}>Demo</a>}
-      </p>
-    )}
-
-    <Content />
-  </article>
-</PostLayout>
+  <Content />
+</ProjectLayout>
