@@ -1,20 +1,37 @@
 ---
 import TagPill from "../ui/TagPill.astro";
+
+type Props = {
+  title: string;
+  excerpt?: string;
+  heroImage?: string;
+  href: string;
+  tags?: string[];
+};
+
+const { title, excerpt, heroImage, href, tags = [] } = Astro.props as Props;
 ---
 
 <article>
-  <a href="">
-    <img src="/example-thumbnail.jpg" alt="Project image">
+  <a href={href} class="home-card">
+    {heroImage && (
+      <img class="thumb" src={heroImage} alt={title} loading="lazy" />
+    )}
     <div class="content">
-      <h3>La filosofía detrás de los mapas</h3>
-      <p>Cómo la cartografía refleja no solo datos físicos, sino también visiones culturales del mundo.</p>
+      <h3>{title}</h3>
+
+      {excerpt && <p>{excerpt}</p>}
+
       <div class="separator"></div>
-      <ul class="tags">
-        <TagPill label="Filosofía" />
-        <TagPill label="Cartografía" />
-        <TagPill label="Cultura" />
-      </ul>
+
+      {tags.length > 0 && (
+        <ul class="tags">
+          {tags.map((t) => <TagPill label={t} />)}
+        </ul>
+      )}
     </div>
+
+    
   </a>
 </article>
 

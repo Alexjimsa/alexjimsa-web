@@ -4,13 +4,32 @@ import Layout from "../layouts/DefaultLayout.astro"
 import TitleCard from "../components/content/Title-card.astro";
 import HomeProjectCard from "../components/content/HomeProject-card.astro";
 import HomeBlogCard from "../components/content/HomeBlog-card.astro";
+
+import { getCollection } from "astro:content";
+
+const lang = "es";
+
+const posts = await getCollection("blog", ({ data }) =>
+  data.published && data.lang === lang
+);
+
+posts.sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
+const latestPost = posts[0];
 ---
 
 <Layout>
 	<TitleCard />
 	<HomeProjectCard />
 	<HomeProjectCard />
-	<HomeBlogCard />
+	{latestPost && (
+  <HomeBlogCard
+    title={latestPost.data.title}
+    excerpt={latestPost.data.excerpt}
+    heroImage={latestPost.data.heroImage}
+    tags={latestPost.data.tags}
+    href={`/blog/${latestPost.data.slug}`}
+  />
+	)}
 </Layout>
 
 
