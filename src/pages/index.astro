@@ -38,26 +38,45 @@ const featuredProjects = featuredProjectsAll.slice(0, 2);
 
 <Layout>
 	<TitleCard />
-	{featuredProjects.map((p) => (
-    <HomeProjectCard
-      title={p.data.title}
-      excerpt={p.data.excerpt}
-      heroImage={p.data.heroImage}
-      stack={p.data.stack}
-      href={`/projects/${p.data.slug}`}
+  <section>
+    <h2>Proyectos destacados</h2>
+    {featuredProjects.map((p) => (
+      <HomeProjectCard
+        title={p.data.title}
+        excerpt={p.data.excerpt}
+        heroImage={p.data.heroImage}
+        stack={p.data.stack}
+        href={`/projects/${p.data.slug}`}
+      />
+    ))}
+    <SeeMore to="projects" />
+  </section>
+  <section>
+    <h2>Último post</h2>
+    {latestPost && (
+    <HomeBlogCard
+      title={latestPost.data.title}
+      excerpt={latestPost.data.excerpt}
+      heroImage={latestPost.data.heroImage}
+      tags={latestPost.data.tags}
+      href={`/blog/${latestPost.data.slug}`}
     />
-  ))}
-  <SeeMore to="projects" />
-	{latestPost && (
-  <HomeBlogCard
-    title={latestPost.data.title}
-    excerpt={latestPost.data.excerpt}
-    heroImage={latestPost.data.heroImage}
-    tags={latestPost.data.tags}
-    href={`/blog/${latestPost.data.slug}`}
-  />
-	)}
-  <SeeMore to="blog" />
+    )}
+    <SeeMore to="blog" />
+  </section>
+	
 </Layout>
 
 
+<style>
+  section {
+    margin: 2rem auto;
+    width: 100%;
+    max-width: var(--max-width);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+  }
+</style>
