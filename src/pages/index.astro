@@ -54,13 +54,13 @@ const featuredProjects = featuredProjectsAll.slice(0, 2);
   <section>
     <h2>Último post</h2>
     {latestPost && (
-    <HomeBlogCard
-      title={latestPost.data.title}
-      excerpt={latestPost.data.excerpt}
-      heroImage={latestPost.data.heroImage}
-      tags={latestPost.data.tags}
-      href={`/blog/${latestPost.data.slug}`}
-    />
+      <HomeBlogCard
+        title={latestPost.data.title}
+        excerpt={latestPost.data.excerpt}
+        heroImage={latestPost.data.heroImage}
+        tags={latestPost.data.tags}
+        href={`/blog/${latestPost.data.slug}`}
+      />
     )}
     <SeeMore to="blog" />
   </section>
