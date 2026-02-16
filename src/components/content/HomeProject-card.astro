@@ -1,16 +1,34 @@
+---
+type Props = {
+  title: string;
+  excerpt?: string;
+  heroImage?: string;
+  href: string;
+  stack?: string[];
+};
+
+const { title, excerpt, heroImage, href, stack = [] } = Astro.props as Props;
+---
+
 <article>
-  <a href="">
-    <img src="/example-thumbnail.jpg" alt="Project image">
+  <a href={href}>
+    {heroImage && (
+      <img class="thumb" src={heroImage} alt={title} loading="lazy" />
+    )}
+
     <div class="content">
-      <h3>Aplicación de Mapas Geológicos</h3>
-      <p>Herramienta web para visualizar datos de campo y modelos 3D de estratigrafía, desarrollada con React y Three.js.</p>
+      <h3>{title}</h3>
+
+      {excerpt && <p>{excerpt}</p>}
+
       <div class="separator"></div>
-      <ul class="stack">
-        <li>HTML</li>
-        <li>CSS</li>
-        <li>React</li>
-        <li>Three.js</li>
-      </ul>
+
+      {stack.length > 0 && (
+        <ul class="stack">
+          {stack.map((tech) => <li>{tech}</li>)}
+        </ul>
+      )}
+    
     </div>
   </a>
 </article>

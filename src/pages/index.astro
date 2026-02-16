@@ -4,23 +4,50 @@ import Layout from "../layouts/DefaultLayout.astro"
 import TitleCard from "../components/content/Title-card.astro";
 import HomeProjectCard from "../components/content/HomeProject-card.astro";
 import HomeBlogCard from "../components/content/HomeBlog-card.astro";
+import SeeMore from "../components/ui/SeeMore.astro";
 
 import { getCollection } from "astro:content";
 
 const lang = "es";
 
+// -------- BLOG --------
 const posts = await getCollection("blog", ({ data }) =>
   data.published && data.lang === lang
 );
 
-posts.sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
+posts.sort((a, b) =>
+  (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0)
+);
+
 const latestPost = posts[0];
+
+
+// -------- PROYECTOS DESTACADOS --------
+const featuredProjectsAll = await getCollection("projects", ({ data }) =>
+  data.published &&
+  data.lang === lang &&
+  data.featured === true
+);
+
+featuredProjectsAll.sort(
+  (a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0)
+);
+
+const featuredProjects = featuredProjectsAll.slice(0, 2);
 ---
 
 <Layout>
 	<TitleCard />
-	<HomeProjectCard />
-	<HomeProjectCard />
+	{featuredProjects.map((p) => (
+    <HomeProjectCard
+      title={p.data.title}
+      excerpt={p.data.excerpt}
+      heroImage={p.data.heroImage}
+      stack={p.data.stack}
+      href={`/projects/${p.data.slug}`}
+    />
+  ))}
+  <SeeMore to="projects" />
 	{latestPost && (
   <HomeBlogCard
     title={latestPost.data.title}
@@ -30,6 +57,7 @@ const latestPost = posts[0];
     href={`/blog/${latestPost.data.slug}`}
   />
 	)}
+  <SeeMore to="blog" />
 </Layout>
 
 

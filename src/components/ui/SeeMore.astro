@@ -1,0 +1,47 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+type Props = {
+  /** destino SIN locale, ej: "projects" | "/projects" | "blog" | "/blog" */
+  to: string;
+};
+
+const { to } = Astro.props;
+
+// idioma actual (mismo enfoque que tu LanguageSwitcher)
+const { pathname } = Astro.url;
+const current = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
+
+// normaliza `to` para que sea tipo "projects" (sin / inicial)
+const bareTo = to.replace(/^\/+/, "").replace(/^en\/+/, "");
+
+// href final según locale actual
+const href = getRelativeLocaleUrl(current, `/${bareTo}`);
+
+// label fijo según idioma
+const label = current === "en" ? "See more" : "Ver más";
+---
+
+<a href={href}>
+  <span>{label}</span>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM8.31152 8.31152L3.75 10L8.31152 11.6885L10 16.25L11.6885 11.6885L16.25 10L11.6885 8.31152L10 3.75L8.31152 8.31152Z" fill="currentColor"/>
+  </svg>
+</a>
+
+
+
+<style>
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--size-2);
+
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  a:hover, a:focus {
+    color: var(--color-primary);
+  }
+</style>
