@@ -1,0 +1,23 @@
+---
+lang: "es"
+title: "Mapa de Zonas Protegidas de la Comunidad de Madrid"
+excerpt: "Visor web interactivo de zonas protegidas de la Comunidad de Madrid"
+heroImage: "/example-thumbnail.jpg"
+published: true
+featured: true
+slug: "zona-protegida"
+translationKey: "proj-005"  # <- empareja con EN
+status: "completed"
+date: 2026-06-23
+stack: ["HTML", "CSS", "JavaScript", "Leaflet.js"]
+repoUrl: "https://github.com/Alexjimsa/madrid-protected-areas"
+demoUrl: "https://alexjimsa.github.io/madrid-protected-areas"
+---
+
+Este proyecto consiste en un visor web interactivo de zonas protegidas de la Comunidad de Madrid, desarrollado con HTML, CSS, JavaScript y Leaflet.js.
+
+El proceso comenzó con la descarga de datos geográficos oficiales desde el Centro de Descargas del IGN en formato Shapefile. A partir de esos datos, trabajé en QGIS para seleccionar únicamente las capas y entidades necesarias: el límite administrativo de la Comunidad de Madrid y los polígonos correspondientes a espacios protegidos.
+
+Una vez preparada la información, exporté las capas a formato GeoJSON, adaptando el sistema de referencia desde ETRS89 al sistema WGS84, más adecuado para su uso en aplicaciones web y visores basados en Leaflet.
+
+La parte web se desarrolló de forma nativa, sin frameworks, utilizando únicamente HTML, CSS y JavaScript. Leaflet.js se incorporó mediante CDN, evitando añadir dependencias innecesarias al proyecto. El resultado es un visor ligero en el que el usuario puede explorar los espacios protegidos, interactuar con los polígonos y consultar información básica junto con los atributos GIS originales.

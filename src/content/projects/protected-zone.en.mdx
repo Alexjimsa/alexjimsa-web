@@ -1,0 +1,23 @@
+---
+lang: "en"
+title: "Protected Areas Map of the Community of Madrid"
+excerpt: "Interactive web viewer of protected areas in the Community of Madrid"
+heroImage: "/example-thumbnail.jpg"
+published: true
+featured: true
+slug: "protected-area"
+translationKey: "proj-005"  # <- pairs with ES
+status: "completed"
+date: 2026-06-23
+stack: ["HTML", "CSS", "JavaScript", "Leaflet.js"]
+repoUrl: "https://github.com/Alexjimsa/madrid-protected-areas"
+demoUrl: "https://alexjimsa.github.io/madrid-protected-areas"
+---
+
+This project consists of an interactive web viewer of protected areas in the Community of Madrid, developed with HTML, CSS, JavaScript, and Leaflet.js.
+
+The process began with downloading official geographic data from the IGN Download Center in Shapefile format. Using that data, I worked in QGIS to select only the necessary layers and features: the administrative boundary of the Community of Madrid and the polygons corresponding to protected areas.
+
+Once the data had been prepared, I exported the layers to GeoJSON format, adapting the coordinate reference system from ETRS89 to WGS84, which is more suitable for use in web applications and Leaflet-based viewers.
+
+The web component was developed natively, without frameworks, using only HTML, CSS, and JavaScript. Leaflet.js was included via CDN, avoiding unnecessary dependencies in the project. The result is a lightweight viewer where users can explore protected areas, interact with the polygons, and consult basic information together with the original GIS attributes.
